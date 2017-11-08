@@ -1,0 +1,43 @@
+security:
+    # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        in_memory:
+            memory:
+                users:
+                    antoine:
+                        password: $2y$10$L05zlGZWM4f/.7cXPF0CXeY5bECh5/g.T73gIoZon1UVkQAzHpjD6
+                        roles: 'ROLE_USER'
+                    admin:
+                        password: $2y$10$L05zlGZWM4f/.7cXPF0CXeY5bECh5/g.T73gIoZon1UVkQAzHpjD6
+                        roles: 'ROLE_ADMIN'
+
+    encoders:
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+            cost: 10
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # https://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+
+            form_login:
+                login_path: login
+                check_path: login
+            logout: ~
+            # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
+
+    access_control:
+        - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
